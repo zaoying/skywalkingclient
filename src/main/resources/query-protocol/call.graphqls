@@ -1,0 +1,9 @@
+type BomsCall {
+    callNum: [Long]!
+    callSuccess: [Long]!
+    callFail: [Long]!
+}
+
+extend type Query {
+    getCall(duration: Duration!,id: String!): BomsCall!
+}
