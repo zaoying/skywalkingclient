@@ -1,0 +1,10 @@
+# IntelliJ IDEA
+.idea
+*.iml
+
+# maven
+target
+
+# Privacy
+graphqlv6.4.yaml
+graphqlv6.yaml
