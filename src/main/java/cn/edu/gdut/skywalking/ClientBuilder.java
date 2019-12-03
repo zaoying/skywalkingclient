@@ -1,5 +1,9 @@
-package cn.edu.gdut.skywalking.graphql;
+package cn.edu.gdut.skywalking;
 
+import cn.edu.gdut.skywalking.graphql.Query;
+import cn.edu.gdut.skywalking.graphql.QueryProxy;
+import cn.edu.gdut.skywalking.graphql.QueryV6;
+import cn.edu.gdut.skywalking.graphql.QueryV6Proxy;
 import feign.Feign;
 import feign.Request;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +25,11 @@ public class ClientBuilder {
     public static Query build(String hostPort) {
         GraphqlClient graphqlClient = build(hostPort, GraphqlClient.class);
         return new QueryProxy(graphqlClient);
+    }
+
+    public static QueryV6 buildV6(String hostPort) {
+        GraphqlClient graphqlClient = build(hostPort, GraphqlClient.class);
+        return QueryV6Proxy.build(graphqlClient);
     }
 
     public static Callback<? extends Map> proxy(String hostPort) {

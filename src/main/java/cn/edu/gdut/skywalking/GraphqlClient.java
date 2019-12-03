@@ -1,4 +1,4 @@
-package cn.edu.gdut.skywalking.graphql;
+package cn.edu.gdut.skywalking;
 
 import feign.Body;
 import feign.Headers;

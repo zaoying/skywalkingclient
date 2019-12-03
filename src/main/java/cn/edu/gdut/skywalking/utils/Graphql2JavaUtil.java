@@ -28,7 +28,7 @@ public class Graphql2JavaUtil {
     public static final Map<String,Keyword> dictionary = new HashMap<>();
     public static final Map<String,String> SCALAR_MAP = new HashMap<>();
 
-    private static final String FILE_PATH = "src\\main\\java\\cn\\edu\\gdut\\skywalking\\graphql\\";
+    public static final String FILE_PATH = "src\\main\\java\\cn\\edu\\gdut\\skywalking\\graphql\\";
 
     public enum Keyword {
         SCALAR,

@@ -1,7 +1,9 @@
-import cn.edu.gdut.skywalking.graphql.ClientBuilder;
+import cn.edu.gdut.skywalking.ClientBuilder;
 import cn.edu.gdut.skywalking.graphql.Query;
+import cn.edu.gdut.skywalking.graphql.QueryV6;
 import cn.edu.gdut.skywalking.graphql.enums.Step;
 import cn.edu.gdut.skywalking.graphql.input.Duration;
+import cn.edu.gdut.skywalking.graphql.input.LabelDuration;
 import cn.edu.gdut.skywalking.graphql.type.Service;
 import cn.edu.gdut.skywalking.utils.Functions;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,12 +31,6 @@ public class GraphqlClientTest {
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
         File file = new File(url.getFile());
         graphqlQueryMap = mapper.readValue(file, new TypeReference<HashMap<String,String>>(){});
-    }
-
-    @Test
-    public void queryConvert() {
-        graphqlQueryMap.values()
-                .forEach(System.out::println);
     }
 
     @Test
@@ -70,15 +66,30 @@ public class GraphqlClientTest {
     @Test
     public void getAllServices() throws JsonProcessingException {
 
-        Query query = ClientBuilder.build(hostPort);
+        QueryV6 query = ClientBuilder.buildV6(hostPort);
 
         Duration duration = new Duration();
         duration.setStart("2019-11-29 0800");
         duration.setEnd("2019-11-29 1200");
         duration.setStep(Step.MINUTE);
 
-        Service[] services = query.getAllServices(duration);
+        Map<String,Object> response = query.allServices(duration);
 
-        System.out.println(new ObjectMapper().writeValueAsString(services));
+        System.out.println(new ObjectMapper().writeValueAsString(response));
+    }
+
+    @Test
+    public void globalTopology() throws JsonProcessingException {
+
+        QueryV6 query = ClientBuilder.buildV6(hostPort);
+
+        LabelDuration duration = new LabelDuration();
+        duration.setStart("2019-11-29 0800");
+        duration.setEnd("2019-11-29 1200");
+        duration.setStep(Step.MINUTE);
+
+        Map<String,Object> response = query.globalTopology(duration);
+
+        System.out.println(new ObjectMapper().writeValueAsString(response));
     }
 }

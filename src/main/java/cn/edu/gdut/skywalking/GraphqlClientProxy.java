@@ -1,4 +1,4 @@
-package cn.edu.gdut.skywalking.graphql;
+package cn.edu.gdut.skywalking;
 
 import cn.edu.gdut.skywalking.utils.Java2GraphqlUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
