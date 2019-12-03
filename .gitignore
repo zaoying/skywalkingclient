@@ -5,16 +5,5 @@
 # maven
 target
 
-# privacy
-graphqlv6.4.yaml
-graphqlv6.yaml
-
 # generate files
-src/main/java/cn/edu/gdut/skywalking/graphql/enums/*.java
-src/main/java/cn/edu/gdut/skywalking/graphql/input/*.java
-src/main/java/cn/edu/gdut/skywalking/graphql/query/*.java
-src/main/java/cn/edu/gdut/skywalking/graphql/type/*.java
-src/main/java/cn/edu/gdut/skywalking/graphql/Query.java
-src/main/java/cn/edu/gdut/skywalking/graphql/QueryProxy.java
-src/main/java/cn/edu/gdut/skywalking/graphql/Scalar.java
-src/main/java/cn/edu/gdut/skywalking/graphql/Schema.java
+src/main/java/cn/edu/gdut/skywalking/graphql/
