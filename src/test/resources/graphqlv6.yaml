@@ -1,0 +1,793 @@
+basicTracesSixPointOne: |
+    query BasicTraces($condition: TraceQueryCondition) {
+            queryBasicTraces(condition: $condition) {
+              traces {
+                key: segmentId
+                endpointNames
+                duration
+                start
+                isError
+                traceIds
+              }
+              total
+            }
+          }
+
+spanQuerySixPointOne: |
+    query Spans($traceId: ID!) {
+      queryTrace(traceId: $traceId) {
+        spans {
+          traceId
+          segmentId
+          spanId
+          parentSpanId
+          refs {
+            traceId
+            parentSegmentId
+            parentSpanId
+            type
+          }
+          serviceCode
+          startTime
+          endTime
+          endpointName
+          type
+          peer
+          component
+          isError
+          layer
+          tags {
+            key
+            value
+          }
+          logs {
+            time
+            data {
+              key
+              value
+            }
+          }
+        }
+      }
+    }
+traceDetailQuerySixPointOne: |
+    query Spans($traceId: ID!) {
+          queryTrace(traceId: $traceId) {
+            spans {
+              traceId
+              segmentId
+              spanId
+              parentSpanId
+              refs {
+                traceId
+                parentSegmentId
+                parentSpanId
+                type
+              }
+              applicationCode
+              startTime
+              endTime
+              operationName
+              type
+              peer
+              component
+              isError
+              layer
+              tags {
+                key
+                value
+              }
+              logs {
+                time
+                data {
+                  key
+                  value
+                }
+              }
+            }
+          }
+        }
+
+serviceInstanceSixPointOne:  |
+ query ServiceInstance($serviceInstanceId: ID!, $duration: Duration!) {
+  getServiceInstanceResponseTimeTrend: getLinearIntValues(metric: {
+    name: "service_instance_resp_time"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  getServiceInstanceThroughputTrend: getLinearIntValues(metric: {
+    name: "service_instance_cpm"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  getServiceInstanceSLA: getLinearIntValues(metric: {
+      name: "service_instance_sla"
+      id: $serviceInstanceId
+  }, duration: $duration) {
+      values {
+            value
+      }
+  }
+  getCPUTrend: getLinearIntValues(metric: {
+    name: "instance_jvm_cpu"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  youngGCCount: getLinearIntValues(metric: {
+    name: "instance_jvm_young_gc_count"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  oldGCCount: getLinearIntValues(metric: {
+    name: "instance_jvm_old_gc_count"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  youngGCTime: getLinearIntValues(metric: {
+    name: "instance_jvm_young_gc_time"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  oldGCTime: getLinearIntValues(metric: {
+    name: "instance_jvm_old_gc_time"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  heap: getLinearIntValues(metric: {
+    name: "instance_jvm_memory_heap"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  maxHeap: getLinearIntValues(metric: {
+    name: "instance_jvm_memory_heap_max"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  noheap: getLinearIntValues(metric: {
+    name: "instance_jvm_memory_noheap"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+  maxNoheap: getLinearIntValues(metric: {
+    name: "instance_jvm_memory_noheap_max"
+    id: $serviceInstanceId
+  }, duration: $duration) {
+    values {
+      value
+    }
+  }
+ }
+
+serviceInstancesSixPointOne: |
+ query Service($serviceId: ID!, $duration: Duration!) {
+    getServiceInstances(duration: $duration, serviceId: $serviceId) {
+      key: id
+      name
+      attributes {
+        name
+        value
+      }
+      language
+    }
+  }
+serviceQuerySixPointOne:  |
+ query Service($serviceId: ID!, $duration: Duration!) {
+    getSlowEndpoint: getEndpointTopN(
+      serviceId: $serviceId
+      duration: $duration
+      name: "endpoint_avg",
+      topN: 10,
+      order: DES
+    ) {
+      key: id
+      label: name
+      value
+    }
+    getServiceInstanceThroughput: getServiceInstanceTopN(
+      serviceId: $serviceId
+      duration: $duration
+      name: "service_instance_cpm",
+      topN: 10,
+      order: DES
+    ) {
+      key: id
+      label: name
+      value
+    }
+    getServiceInstances(duration: $duration, serviceId: $serviceId) {
+      key: id
+      name
+      attributes {
+        name
+        value
+      }
+      language
+    }
+    getServiceTopology(serviceId: $serviceId, duration: $duration) {
+      nodes {
+        id
+        name
+        type
+        isReal
+      }
+      calls {
+        id
+        source
+        target
+        callType
+        detectPoint
+      }
+    }
+    getResponseTimeTrend: getLinearIntValues(metric: {
+          name: "service_resp_time"
+          id: $serviceId
+    }, duration: $duration) {
+          values {
+          value
+          }
+    }
+    getThroughputTrend: getLinearIntValues(metric: {
+          name: "service_cpm"
+          id: $serviceId
+    }, duration: $duration) {
+          values {
+            value
+          }
+    }
+    getSLATrend: getLinearIntValues(metric: {
+          name: "service_sla"
+          id: $serviceId
+    }, duration: $duration) {
+        values {
+            value
+        }
+    }
+    getP99: getLinearIntValues(metric: {
+      name: "service_p99"
+      id: $serviceId
+    }, duration: $duration) {
+      values {
+        value
+      }
+    }
+    getP95: getLinearIntValues(metric: {
+      name: "service_p95"
+      id: $serviceId
+    }, duration: $duration) {
+      values {
+        value
+      }
+    }
+    getP90: getLinearIntValues(metric: {
+      name: "service_p90"
+      id: $serviceId
+    }, duration: $duration) {
+      values {
+        value
+      }
+    }
+    getP75: getLinearIntValues(metric: {
+      name: "service_p75"
+      id: $serviceId
+    }, duration: $duration) {
+      values {
+        value
+      }
+    }
+    getP50: getLinearIntValues(metric: {
+      name: "service_p50"
+      id: $serviceId
+    }, duration: $duration) {
+      values {
+        value
+      }
+    }
+  }
+
+serviceSlowQuerySixPointOne:  |
+ query Service($serviceId: ID!, $duration: Duration!) {
+    getSlowEndpoint: getEndpointTopN(
+      serviceId: $serviceId
+      duration: $duration
+      name: "endpoint_avg",
+      topN: 10,
+      order: DES
+    ) {
+      key: id
+      label: name
+      value
+    }
+  }
+
+serviceTopologyQuerySixPointOne:  |
+ query Service($serviceId: ID!, $duration: Duration!) {
+    getServiceTopology(serviceId: $serviceId, duration: $duration) {
+      nodes {
+        id
+        name
+        type
+        isReal
+      }
+      calls {
+        id
+        source
+        target
+        callType
+        detectPoint
+      }
+    }
+  }
+
+topologyMetricSixPointOne: |
+   query TopologyMetric($duration: Duration!, $ids: [ID!]!) {
+     sla: getValues(metric: {
+       name: "service_sla"
+       ids: $ids
+     }, duration: $duration) {
+       values {
+         id
+         value
+       }
+     }
+     nodeCpm: getValues(metric: {
+       name: "service_cpm"
+       ids: $ids
+     }, duration: $duration) {
+       values {
+         id
+         value
+       }
+     }
+     nodeLatency: getValues(metric: {
+       name: "service_resp_time"
+       ids: $ids
+     }, duration: $duration) {
+       values {
+         id
+         value
+       }
+     }
+   }
+
+endpointTopologyMetricSixPointOne:  |
+ query TopologyMetric($duration: Duration!, $idsS: [ID!]!) {
+    cpm: getValues(metric: {
+      name: "endpoint_relation_cpm"
+      ids: $idsS
+    }, duration: $duration) {
+      values {
+        id
+        value
+      }
+    }
+  }
+
+globalTopologySixPointOne:  |
+ query Topology($duration: LabelDuration!) {
+       getGlobalTopologyByLabel(duration: $duration) {
+         nodes {
+           id
+           name
+           type
+           isReal
+           nodeType
+         }
+         calls {
+           id
+           source
+           target
+           callType
+           detectPoint
+         }
+       }
+     }
+
+globalAppTopologySixPointOne:  |
+ query Topology($duration: LabelDuration!) {
+       getGlobalAppTopologyByLabel(duration: $duration) {
+         nodes {
+           id
+           name
+           type
+           isReal
+           nodeType
+         }
+         calls {
+           id
+           source
+           target
+           callType
+           detectPoint
+         }
+       }
+     }
+
+allServicesSixPointOne:  |
+   query ServiceOption($duration: Duration!) {
+      serviceId: getAllServices(duration: $duration) {
+        key: id
+        label: name
+      }
+    }
+
+topologyServerMetricSixPointOne: |
+  query TopologyServerMetric($duration: Duration!, $idsS: [ID!]!) {
+    cpmS: getValues(metric: {
+      name: "service_relation_server_cpm"
+      ids: $idsS
+    }, duration: $duration) {
+      values {
+        id
+        value
+      }
+    }
+    latencyS: getValues(metric: {
+      name: "service_relation_client_resp_time"
+      ids: $idsS
+    }, duration: $duration) {
+      values {
+        id
+        value
+      }
+    }
+  }
+
+topologyClientMetricSixPointOne: |
+  query TopologyClientMetric($duration: Duration!, $idsC: [ID!]!) {
+    cpmC: getValues(metric: {
+      name: "service_relation_client_cpm"
+      ids: $idsC
+    }, duration: $duration) {
+      values {
+        id
+        value
+      }
+    }
+    latencyC: getValues(metric: {
+      name: "service_relation_client_resp_time"
+      ids: $idsC
+    }, duration: $duration) {
+      values {
+        id
+        value
+      }
+    }
+  }
+
+applicationTopologySixPointOne:  |
+  query Service($serviceId: ID!, $duration: Duration!) {
+      getServiceTopology(serviceId: $serviceId, duration: $duration) {
+            nodes {
+              id
+              name
+              type
+              isReal
+            }
+            calls {
+              id
+              source
+              target
+              callType
+              detectPoint
+            }
+          }
+    }
+
+serviceOptionSixPointOne:  |
+  query ServiceOption($duration: Duration!) {
+      serviceId: getAllServices(duration: $duration) {
+            key: id
+            label: name
+      }
+  }
+searchEndpointSixPointOne: |
+  query SearchEndpoint($serviceId: ID!, $keyword: String!) {
+      searchEndpoint(serviceId: $serviceId, keyword: $keyword, limit: 100) {
+            key: id
+            label: name
+      }
+  }
+getEndpointResponseTimeTrendSixPointOne: |
+  query Endpoint($endpointId: ID!, $duration: Duration!, $traceCondition: TraceQueryCondition!) {
+      getEndpointResponseTimeTrend: getLinearIntValues(metric: {
+            name: "endpoint_avg"
+            id: $endpointId
+      }, duration: $duration) {
+            values {
+                value
+            }
+      }
+      getEndpointThroughputTrend: getLinearIntValues(metric: {
+            name: "endpoint_cpm"
+            id: $endpointId
+      }, duration: $duration) {
+            values {
+                value
+            }
+      }
+      getEndpointSLATrend: getLinearIntValues(metric: {
+            name: "endpoint_sla"
+            id: $endpointId
+      }, duration: $duration) {
+            values {
+                value
+            }
+      }
+      queryBasicTraces(condition: $traceCondition) {
+            traces {
+                key: segmentId
+                endpointNames
+                duration
+                start
+                isError
+                traceIds
+            }
+            total
+      }
+      getP99: getLinearIntValues(metric: {
+            name: "endpoint_p99"
+            id: $endpointId
+      }, duration: $duration) {
+            values {
+                value
+            }
+      }
+      getP95: getLinearIntValues(metric: {
+            name: "endpoint_p95"
+            id: $endpointId
+      }, duration: $duration) {
+            values {
+                value
+            }
+      }
+      getP90: getLinearIntValues(metric: {
+            name: "endpoint_p90"
+            id: $endpointId
+      }, duration: $duration) {
+            values {
+                value
+            }
+      }
+      getP75: getLinearIntValues(metric: {
+            name: "endpoint_p75"
+            id: $endpointId
+      }, duration: $duration) {
+            values {
+                value
+            }
+      }
+      getP50: getLinearIntValues(metric: {
+            name: "endpoint_p50"
+            id: $endpointId
+      }, duration: $duration) {
+            values {
+                value
+            }
+      }
+      getEndpointTopology(endpointId: $endpointId, duration: $duration) {
+            nodes {
+                id
+                name
+                type
+                isReal
+            }
+            calls {
+                id
+                source
+                target
+                callType
+                detectPoint
+            }
+      }
+  }
+getDashBoardDatabaseSixPointOne:   |
+  query getDashBoardDatabase($databaseId: ID!, $duration: Duration!, $condition: TopNRecordsCondition!) {
+      getResponseTimeTrend: getLinearIntValues(metric: {
+        name: "database_access_resp_time"
+        id: $databaseId
+      }, duration: $duration) {
+        values {
+         value
+        }
+      }
+      getThroughputTrend: getLinearIntValues(metric: {
+        name: "database_access_cpm"
+        id: $databaseId
+      }, duration: $duration) {
+        values {
+          value
+        }
+      }
+      getSLATrend: getLinearIntValues(metric: {
+        name: "database_access_sla"
+        id: $databaseId
+      }, duration: $duration) {
+        values {
+         value
+        }
+      }
+      getP99: getLinearIntValues(metric: {
+        name: "database_access_p99"
+        id: $databaseId
+      }, duration: $duration) {
+        values {
+          value
+        }
+      }
+      getP95: getLinearIntValues(metric: {
+        name: "database_access_p95"
+        id: $databaseId
+      }, duration: $duration) {
+        values {
+          value
+        }
+      }
+      getP90: getLinearIntValues(metric: {
+          name: "database_access_p90"
+          id: $databaseId
+      }, duration: $duration) {
+        values {
+          value
+        }
+      }
+      getP75: getLinearIntValues(metric: {
+        name: "database_access_p75"
+        id: $databaseId
+      }, duration: $duration) {
+        values {
+          value
+        }
+      }
+      getP50: getLinearIntValues(metric: {
+        name: "database_access_p50"
+        id: $databaseId
+      }, duration: $duration) {
+        values {
+          value
+        }
+      }
+      getTopNRecords(condition: $condition) {
+        statement
+        latency
+        traceId
+      }
+  }
+topoServerInfoSixPointOne:    |
+    query queryTopoServiceInfo($duration: Duration!, $id: ID!) {
+        getResponseTimeTrend: getLinearIntValues(metric: {
+          name: "service_relation_server_resp_time"
+          id: $id
+        }, duration: $duration) {
+          values {
+            value
+          }
+        }
+        getThroughputTrend: getLinearIntValues(metric: {
+          name: "service_relation_server_cpm"
+          id: $id
+        }, duration: $duration) {
+          values {
+            value
+          }
+        }
+        getSLATrend: getLinearIntValues(metric: {
+          name: "service_relation_server_call_sla"
+          id: $id
+        }, duration: $duration) {
+          values {
+            value
+          }
+        }
+    }
+topoClientInfoSixPointOne:    |
+    query queryTopoClientInfo($duration: Duration!, $id: ID!) {
+        getResponseTimeTrend: getLinearIntValues(metric: {
+          name: "service_relation_client_resp_time"
+          id: $id
+        }, duration: $duration) {
+          values {
+            value
+          }
+        }
+        getThroughputTrend: getLinearIntValues(metric: {
+          name: "service_relation_client_cpm"
+          id: $id
+        }, duration: $duration) {
+          values {
+            value
+          }
+        }
+        getSLATrend: getLinearIntValues(metric: {
+          name: "service_relation_client_call_sla"
+          id: $id
+        }, duration: $duration) {
+          values {
+            value
+          }
+        }
+    }
+getServiceMetricQuerySixPointOne:    |
+   query getServiceMetricQuery($names: [String]!, $duration: Duration!) {
+      getServiceMetricQuery(names: $names,duration: $duration) {
+          name
+          serviceId
+          serviceSla
+          serviceCpm
+          serviceRespTime
+      }
+   }
+
+getProjectReqTotalQuerySixPointOne:    |
+   query getServiceReqTotalQuery($names: [String]!, $duration: Duration!) {
+      getServiceReqTotalQuery(names: $names,duration: $duration) {
+          name
+          serviceId
+          reqTotal
+      }
+   }
+
+getServiceRespTimeQuerySixPointOne:    |
+   query getServiceRespTimeQuery($names: [String]!, $duration: Duration!) {
+      getServiceRespTimeQuery(names: $names,duration: $duration) {
+          name
+          serviceId
+          serviceRespTime
+      }
+   }
+getServiceReqSuccessNumberSixPointOne:    |
+   query getServiceReqSuccessNumber($names: [String]!, $duration: Duration!) {
+      getServiceReqSuccessNumber(names: $names,duration: $duration) {
+          name
+          successNumber
+          failNumber
+      }
+   }
+callForAppSixPointOne:     |
+  query callForApp($duration: Duration!,$id: String!) {
+         getCall: getCall(duration: $duration,id: $id) {
+            	callNum
+            	callSuccess
+            	callFail
+         }
+     }
+getThroughputTrendSixPointOne:    |
+   query queryDashBoardService($serviceId: ID!, $duration: Duration!) {
+       getThroughputTrend: getLinearIntValues(metric: {
+          name: "service_cpm"
+          id: $serviceId
+        }, duration: $duration) {
+          values {
+          value
+          }
+       }
+   }
