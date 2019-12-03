@@ -20,14 +20,13 @@ import java.util.function.Function;
 
 @Slf4j
 public class ClientBuilder {
-    public static final String GRAPHQL_V6_FILE = "graphqlv6.yml";
+    public static final String GRAPHQL_V6_FILE = "src/main/resources/graphqlv6.yaml";
 
     public static final Map<String,String> graphqlQueryMap = new HashMap<>();
 
     static {
         try {
-            URL url = ClientBuilder.class.getResource(GRAPHQL_V6_FILE);
-            File file = new File(url.getFile());
+            File file = new File(GRAPHQL_V6_FILE);
 
             ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
