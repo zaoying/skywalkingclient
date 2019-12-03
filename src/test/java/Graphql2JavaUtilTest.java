@@ -1,5 +1,5 @@
-import cn.edu.gdut.skywalking.graphql.Query;
 import cn.edu.gdut.skywalking.graphql.input.Duration;
+import cn.edu.gdut.skywalking.graphql.type.Query;
 import cn.edu.gdut.skywalking.graphql.type.Service;
 import cn.edu.gdut.skywalking.utils.FileUtils;
 import cn.edu.gdut.skywalking.utils.Graphql2JavaUtil;

@@ -21,11 +21,11 @@ public class GraphqlQueryParser {
     public static void saveAsClass(String methods) {
         String classString = String.format(JAVA_INTERFACE_TEMPLATE, "QueryV6", methods);
 
-        String classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, "") + classString;
+        String classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, "query") + classString;
 
-        String className = "QueryV6";
-        FileUtils.writeFile(FILE_PATH + className + ".java")
-                .apply(classContent);
+        String filePath = FILE_PATH + "query\\" + "QueryV6.java";
+
+        FileUtils.writeFile(filePath).apply(classContent);
     }
 
     public static String parseQuery(Map.Entry<String,String> entry) {

@@ -1,13 +1,18 @@
 package cn.edu.gdut.skywalking;
 
-import cn.edu.gdut.skywalking.graphql.Query;
-import cn.edu.gdut.skywalking.graphql.QueryProxy;
-import cn.edu.gdut.skywalking.graphql.QueryV6;
-import cn.edu.gdut.skywalking.graphql.QueryV6Proxy;
+import cn.edu.gdut.skywalking.graphql.query.QueryV6;
+import cn.edu.gdut.skywalking.graphql.query.QueryV6Proxy;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import feign.Feign;
 import feign.Request;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +20,25 @@ import java.util.function.Function;
 
 @Slf4j
 public class ClientBuilder {
+    public static final String GRAPHQL_V6_FILE = "graphqlv6.yml";
+
+    public static final Map<String,String> graphqlQueryMap = new HashMap<>();
+
+    static {
+        try {
+            URL url = ClientBuilder.class.getResource(GRAPHQL_V6_FILE);
+            File file = new File(url.getFile());
+
+            ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+
+            Map<String,String> graphqlQueries = mapper.readValue(file, new TypeReference<HashMap<String,String>>(){});
+            graphqlQueryMap.putAll(graphqlQueries);
+
+        } catch (IOException io) {
+            log.error(String.format("解析%s文件失败", GRAPHQL_V6_FILE), io);
+        }
+    }
+
     public static <T> T build(String hostPort, Class<T> clazz) {
         return Feign.builder()
                 .requestInterceptor(requestTemplate -> log.debug(requestTemplate.requestBody().asString()))
@@ -22,14 +46,10 @@ public class ClientBuilder {
                 .target(clazz, hostPort);
     }
 
-    public static Query build(String hostPort) {
-        GraphqlClient graphqlClient = build(hostPort, GraphqlClient.class);
-        return new QueryProxy(graphqlClient);
-    }
-
     public static QueryV6 buildV6(String hostPort) {
         GraphqlClient graphqlClient = build(hostPort, GraphqlClient.class);
-        return QueryV6Proxy.build(graphqlClient);
+        CommonProxy commonProxy = new CommonProxy(graphqlClient, new ObjectMapper(), graphqlQueryMap);
+        return new QueryV6Proxy(commonProxy);
     }
 
     public static Callback<? extends Map> proxy(String hostPort) {

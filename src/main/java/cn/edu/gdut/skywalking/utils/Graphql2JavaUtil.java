@@ -121,10 +121,12 @@ public class Graphql2JavaUtil {
 
                     String className = "Query";
                     String fields = allQueries.toString();
+                    String filePath = FILE_PATH + "query\\Query.java";
+
                     String query = String.format(JAVA_INTERFACE_TEMPLATE, className, fields);
-                    classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, "") + query;
-                    FileUtils.writeFile(FILE_PATH + className + ".java")
-                            .apply(classContent);
+                    classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, "query") + query;
+
+                    FileUtils.writeFile(filePath).apply(classContent);
                     break;
             }
         }
