@@ -1,7 +1,7 @@
 package cn.edu.gdut.skywalking;
 
 import cn.edu.gdut.skywalking.graphql.query.QueryV6;
-import cn.edu.gdut.skywalking.graphql.query.QueryV6Proxy;
+import cn.edu.gdut.skywalking.graphql.QueryV6Proxy;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -11,11 +11,11 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
 @Slf4j
@@ -41,7 +41,7 @@ public class ClientBuilder {
     public static <T> T build(String hostPort, Class<T> clazz) {
         return Feign.builder()
                 .requestInterceptor(requestTemplate -> log.debug(requestTemplate.requestBody().asString()))
-                .options(new Request.Options(2000, 5000))
+                .options(new Request.Options(2000, TimeUnit.MILLISECONDS, 5000, TimeUnit.MILLISECONDS, true))
                 .target(clazz, hostPort);
     }
 
