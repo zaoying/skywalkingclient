@@ -21,7 +21,7 @@ public class GraphqlQueryParser {
     public static void saveAsClass(String methods) {
         String classString = String.format(JAVA_INTERFACE_TEMPLATE, "QueryV6", methods);
 
-        String classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, "query.") + classString;
+        String classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, ".query") + classString;
 
         String filePath = FILE_PATH + "query\\" + "QueryV6.java";
 
