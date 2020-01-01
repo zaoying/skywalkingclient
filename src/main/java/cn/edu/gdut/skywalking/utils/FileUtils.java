@@ -1,11 +1,23 @@
 package cn.edu.gdut.skywalking.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
 public class FileUtils {
+    private static final Logger logger = LoggerFactory.getLogger(FileUtils.class);
+
+    public static void mkdirIfNotExists(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            boolean success = file.mkdir();
+            logger.info("创建文件夹" + path + "结果：" + success);
+        }
+    }
 
     public static Function<String,Void> writeFile(String path) {
         return writeFile(new File(path));

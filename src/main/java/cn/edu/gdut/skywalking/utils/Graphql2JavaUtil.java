@@ -121,10 +121,12 @@ public class Graphql2JavaUtil {
 
                     String className = "Query";
                     String fields = allQueries.toString();
-                    String filePath = FILE_PATH + "query\\Query.java";
+                    String path = FILE_PATH + "query\\";
+                    FileUtils.mkdirIfNotExists(path);
+                    String filePath = path + "Query.java";
 
                     String query = String.format(JAVA_INTERFACE_TEMPLATE, className, fields);
-                    classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, "query") + query;
+                    classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, ".query") + query;
 
                     FileUtils.writeFile(filePath).apply(classContent);
                     break;
@@ -191,6 +193,7 @@ public class Graphql2JavaUtil {
         }
 
         public void writeClassToFile(Keyword keyword, String stringClass, String[] array){
+            FileUtils.mkdirIfNotExists(FILE_PATH);
             String path;
             String dir = null;
             String fileName;
@@ -214,6 +217,7 @@ public class Graphql2JavaUtil {
                 default:
                     return;
             }
+            FileUtils.mkdirIfNotExists(path);
             String filePath = path + fileName;
             String classContent = String.format(JAVA_PACKAGE_IMPORT_TEMPLATE, dir == null ? "" : "." + dir) + stringClass;
             FileUtils.writeFile(filePath).apply(classContent);
