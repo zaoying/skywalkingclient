@@ -21,6 +21,11 @@ public class CommonProxy {
         this.graphqlQueryMap = graphqlQueryMap;
     }
 
+    public <O> O call(TypeReference<O> typeReference, Object... inputArgs) {
+        Class<O> outputClass = (Class<O>) typeReference.getType();
+        return call(outputClass, inputArgs);
+    }
+
     public <O> O call(Class<O> outputClass, Object... inputArgs) {
         Map<String, Object> variables = Java2GraphqlUtil.variablesFormat(inputArgs);
         return call(outputClass, variables);
